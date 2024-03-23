@@ -30,6 +30,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -45,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -181,10 +183,12 @@ private fun StatusIndicator(
         ) {
             LinearProgressIndicator(
                 progress = progressFactor,
+                color = Color(red = 83, blue = 180, green = 187),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(dimensionResource(R.dimen.progress_indicator_height))
                     .clip(RoundedCornerShape(dimensionResource(R.dimen.progress_indicator_corner_radius)))
+
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -219,6 +223,8 @@ private fun RaceControls(
         Button(
             onClick = { onRunStateChange(!isRunning) },
             modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(Color(red = 25, green = 118, blue = 210))
+
         ) {
             Text(if (isRunning) stringResource(R.string.pause) else stringResource(R.string.start))
         }
@@ -226,7 +232,7 @@ private fun RaceControls(
             onClick = onReset,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.reset))
+            Text(stringResource(R.string.reset), color = Color(red = 47,121,222))
         }
     }
 }
