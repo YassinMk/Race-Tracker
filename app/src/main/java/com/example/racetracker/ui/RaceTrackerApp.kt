@@ -15,6 +15,7 @@
  */
 package com.example.racetracker.ui
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
@@ -47,11 +49,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.racetracker.R
 import com.example.racetracker.ui.theme.RaceTrackerTheme
 import kotlinx.coroutines.coroutineScope
@@ -106,6 +110,14 @@ private fun RaceTrackerScreen(
     onRunStateChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val iconSize = 120.dp
+    val maxOffset = screenWidth - 120.dp // subtract the size of the icon
+
+    // Calculate the animated offset for the icon
+    val playerOneOffset by animateDpAsState(targetValue = maxOffset * playerOne.progressFactor)
+    val playerTwoOffset by animateDpAsState(targetValue = maxOffset * playerTwo.progressFactor)
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -122,10 +134,16 @@ private fun RaceTrackerScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
             Icon(
                 painter = painterResource(R.drawable.ic_walk),
                 contentDescription = null,
-                modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_medium))
+                    .size(120.dp)
+                    .align(Alignment.Start)
+                    .offset(x = playerOneOffset-30.dp)
+
             )
             StatusIndicator(
                 participantName = playerOne.name,
@@ -137,7 +155,14 @@ private fun RaceTrackerScreen(
                 progressFactor = playerOne.progressFactor,
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
+            Icon(
+                painter = painterResource(R.drawable.ic_walk),
+                contentDescription = null,
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+                    .size(120.dp)
+                    .align(Alignment.Start)
+                    .offset(x = playerTwoOffset - 30.dp)
+            )
             StatusIndicator(
                 participantName = playerTwo.name,
                 currentProgress = playerTwo.currentProgress,
@@ -205,6 +230,7 @@ private fun StatusIndicator(
                     modifier = Modifier.weight(1f)
                 )
             }
+
         }
     }
 }
